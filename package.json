@@ -105,7 +105,7 @@
       "name": "password",
       "type": "password",
       "required": true,
-      "title": "Password",
+      "title": "Secret Key",
       "description": "Your Bento Secret Key"
     }
   ],

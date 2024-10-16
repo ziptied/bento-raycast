@@ -12,7 +12,7 @@ type ExtensionPreferences = {
   "siteUuid": string,
   /** Publishable Key - Your Bento Publishable Key */
   "username": string,
-  /** Password - Your Bento Secret Key */
+  /** Secret Key - Your Bento Secret Key */
   "password": string
 }
 
