@@ -20,7 +20,7 @@ interface ReportChartProps {
 const width = 800;
 const height = 400;
 const margin = { top: 20, right: 20, bottom: 60, left: 60 };
-
+const numTicks = 5;
 const formatDate = timeFormat("%b %d");
 
 const Chart = ({ report }: ReportChartProps) => {
@@ -62,6 +62,7 @@ const Chart = ({ report }: ReportChartProps) => {
                     left={margin.left}
                     strokeDasharray="2,2"
                     stroke="#3f3f46"
+                    numTicks={numTicks}
                 />
                 <GridColumns
                     scale={xScale}
@@ -69,6 +70,7 @@ const Chart = ({ report }: ReportChartProps) => {
                     top={margin.top}
                     strokeDasharray="2,2"
                     stroke="#3f3f46"
+                    numTicks={numTicks}
                 />
                 <LinePath
                     data={data}
@@ -84,6 +86,9 @@ const Chart = ({ report }: ReportChartProps) => {
                     label="Count"
                     stroke="#a1a1aa"
                     tickStroke="#a1a1aa"
+                    numTicks={numTicks}
+                    hideZero
+                    tickComponent={() => null}
                     labelProps={{
                         fill: '#a1a1aa',
                         fontSize: 12,
@@ -96,18 +101,18 @@ const Chart = ({ report }: ReportChartProps) => {
                     label="Date"
                     stroke="#a1a1aa"
                     tickStroke="#a1a1aa"
-                    labelProps={{
-                        fill: '#a1a1aa',
-                        fontSize: 12,
-                        textAnchor: 'middle'
-                    }}
+                    numTicks={numTicks}
+
+                    hideZero
+                    tickComponent={() => null}
+                    
                 />
                 {data.map((d, i) => (
                     <Text
                         key={i}
                         x={xScale(new Date(d.x))}
-                        y={height - margin.bottom + 20}
-                        fontSize={10}
+                        y={height - margin.bottom + 30}
+                        fontSize={12}
                         textAnchor="middle"
                         angle={45}
                         fill="#a1a1aa"

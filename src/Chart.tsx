@@ -81,6 +81,8 @@ export const Chart: React.FC<ChartProps> = ({ report, width, height, gradientId 
                     label="Count"
                     stroke="#a1a1aa"
                     tickStroke="#a1a1aa"
+                    hideZero
+                    tickComponent={() => null}
                     labelProps={{
                         fill: '#a1a1aa',
                         fontSize: 12,
@@ -93,6 +95,8 @@ export const Chart: React.FC<ChartProps> = ({ report, width, height, gradientId 
                     label="Date"
                     stroke="#a1a1aa"
                     tickStroke="#a1a1aa"
+                    hideZero
+                    tickComponent={() => null}
                     labelProps={{
                         fill: '#a1a1aa',
                         fontSize: 12,
