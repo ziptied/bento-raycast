@@ -74,13 +74,18 @@ export default function ViewBroadcasts() {
         }
     };
 
+    const formatDate = (dateString: string): string => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    };
+
     return (
         <List isLoading={isLoading}>
             {broadcasts.map((broadcast) => (
                 <List.Item
                     key={broadcast.created_at}
                     title={broadcast.name}
-                    subtitle={`Created at: ${new Date(broadcast.created_at).toLocaleString()}`}
+                    subtitle={`Created: ${formatDate(broadcast.created_at)}`}
                     accessories={[
                         getSendStatusAccessory(broadcast),
                         getOpenRateAccessory(broadcast)

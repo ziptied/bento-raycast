@@ -20,6 +20,7 @@ function htmlToMarkdown(html: string): string {
         .replace(/<em>(.*?)<\/em>/gi, '*$1*')
         .replace(/<i>(.*?)<\/i>/gi, '*$1*')
         .replace(/<a href="(.*?)">(.*?)<\/a>/gi, '[$2]($1)')
+        .replace(/<a[^>]* href="([^"]*)"[^>]*>(.*?)<\/a>/gi, '[$2]($1)')
         .replace(/<ul>/gi, '\n')
         .replace(/<\/ul>/gi, '\n')
         .replace(/<li>(.*?)<\/li>/gi, '- $1\n')
@@ -31,12 +32,42 @@ function htmlToMarkdown(html: string): string {
         .replace(/<br class="a-happy-little-line-break">/g, '---')
         .replace(/&amp;/g, '&');
 }
-
 function calculateOpenRate(stats: Broadcast['stats']): number | null {
     if (stats?.recipients > 0 && stats?.total_opens >= 0) {
         return (stats.total_opens / stats.recipients) * 100;
     }
     return null;
+}
+
+function getOpenRateMetadata(openRate: number | null) {
+    let icon: Icon;
+    let color: Color;
+    let text: string;
+
+    if (openRate === null) {
+        icon = Icon.CircleProgress;
+        color = Color.SecondaryText;
+        text = "Pending";
+    } else {
+        const roundedRate = Math.round(openRate);
+        text = `${roundedRate}%`;
+
+        if (roundedRate <= 25) {
+            icon = Icon.CircleProgress25;
+            color = Color.Red;
+        } else if (roundedRate <= 50) {
+            icon = Icon.CircleProgress50;
+            color = Color.Orange;
+        } else if (roundedRate <= 75) {
+            icon = Icon.CircleProgress75;
+            color = Color.Yellow;
+        } else {
+            icon = Icon.CircleProgress100;
+            color = Color.Green;
+        }
+    }
+
+    return { icon, color, text };
 }
 
 export default function BroadcastDetail({ broadcast }: BroadcastDetailProps) {
@@ -58,6 +89,7 @@ ${markdownContent}
     const isSendComplete = sentFinalBatchTime && sentFinalBatchTime <= currentTime;
 
     const openRate = calculateOpenRate(broadcast.stats);
+    const openRateMetadata = getOpenRateMetadata(openRate);
 
     return (
         <Detail
@@ -86,20 +118,12 @@ ${markdownContent}
                             text={sentFinalBatchTime ? sentFinalBatchTime.toLocaleString() : 'Not sent yet'}
                         />
                     )}
-                    {openRate !== null ? (
-                        <Detail.Metadata.Label
-                            title="Open Rate"
-                            text={`${Math.round(openRate)}%`}
+                    <Detail.Metadata.TagList title="Open Rate">
+                        <Detail.Metadata.TagList.Item
+                            text={openRateMetadata.text}
+                            icon={{ source: openRateMetadata.icon, tintColor: openRateMetadata.color }}
                         />
-                    ) : (
-                        <Detail.Metadata.TagList title="Open Rate">
-                            <Detail.Metadata.TagList.Item
-                                text="Pending"
-                                icon={Icon.CircleProgress}
-                                color={Color.SecondaryText}
-                            />
-                        </Detail.Metadata.TagList>
-                    )}
+                    </Detail.Metadata.TagList>
                     <Detail.Metadata.Label
                         title="Recipients"
                         text={broadcast.stats?.recipients?.toString() || 'N/A'}
