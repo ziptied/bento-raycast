@@ -33,19 +33,23 @@ export interface Subscriber {
 
 export interface Broadcast {
     id: string;
-    name: string;
-    share_url: string;
-    template: {
-        subject: string;
-        to: string;
-        html: string;
-    };
-    created_at: string;
-    sent_final_batch_at: string | null;
-    send_at: string | null;
-    stats: {
-        open_rate: number;
-    };
+    type: string;
+        name: string;
+        share_url: string;
+        template: {
+            subject: string;
+            to: string;
+            html: string;
+        };
+        created_at: string;
+        sent_final_batch_at: string | null;
+        send_at: string | null;
+        stats: {
+            recipients: number;
+            total_opens: number;
+            total_clicks: number;
+            click_breakdown: any[];
+        };
 }
 
 export interface Tag {
@@ -84,7 +88,7 @@ export const createSubscriber = async (email: string): Promise<Subscriber> => {
     return response.data.data.attributes;
 };
 
-export const getBroadcasts = async (): Promise<Broadcast[]> => {
+export async function getBroadcasts(): Promise<Broadcast[]> {
     const response = await apiClient.get('/fetch/broadcasts', {
         params: { site_uuid: preferences.siteUuid },
     });
