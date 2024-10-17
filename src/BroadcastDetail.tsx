@@ -33,7 +33,7 @@ function htmlToMarkdown(html: string): string {
 }
 
 function calculateOpenRate(stats: Broadcast['stats']): number | null {
-    if (stats.recipients > 0 && stats.total_opens >= 0) {
+    if (stats?.recipients > 0 && stats?.total_opens >= 0) {
         return (stats.total_opens / stats.recipients) * 100;
     }
     return null;
@@ -89,7 +89,7 @@ ${markdownContent}
                     {openRate !== null ? (
                         <Detail.Metadata.Label
                             title="Open Rate"
-                            text={`${openRate.toFixed(2)}%`}
+                            text={`${Math.round(openRate)}%`}
                         />
                     ) : (
                         <Detail.Metadata.TagList title="Open Rate">
@@ -100,13 +100,22 @@ ${markdownContent}
                             />
                         </Detail.Metadata.TagList>
                     )}
-                    <Detail.Metadata.Label title="Recipients" text={broadcast.stats.recipients.toString()} />
-                    <Detail.Metadata.Label title="Total Opens" text={broadcast.stats.total_opens.toString()} />
-                    <Detail.Metadata.Label title="Total Clicks" text={broadcast.stats.total_clicks.toString()} />
+                    <Detail.Metadata.Label
+                        title="Recipients"
+                        text={broadcast.stats?.recipients?.toString() || 'N/A'}
+                    />
+                    <Detail.Metadata.Label
+                        title="Total Opens"
+                        text={broadcast.stats?.total_opens?.toString() || 'N/A'}
+                    />
+                    <Detail.Metadata.Label
+                        title="Total Clicks"
+                        text={broadcast.stats?.total_clicks?.toString() || 'N/A'}
+                    />
                     <Detail.Metadata.Label title="Broadcast ID" text={broadcast.id} />
                     <Detail.Metadata.Separator />
-                    <Detail.Metadata.Label title="Template Subject" text={broadcast.template.subject} />
-                    <Detail.Metadata.Label title="Template To" text={broadcast.template.to} />
+                    <Detail.Metadata.Label title="Template Subject" text={broadcast.template?.subject || 'N/A'} />
+                    <Detail.Metadata.Label title="Template To" text={broadcast.template?.to || 'N/A'} />
                     <Detail.Metadata.Separator />
                     <Detail.Metadata.Link title="Share URL" target={broadcast.share_url} text="Open Share URL" />
                 </Detail.Metadata>
